@@ -1,0 +1,85 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "dist": {
+      "name": "dist",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "uglify-js"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/dist"
+      ],
+      "fixAvailable": false
+    },
+    "uglify-js": {
+      "name": "uglify-js",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1091686,
+          "name": "uglify-js",
+          "dependency": "uglify-js",
+          "title": "Regular Expression Denial of Service in uglify-js",
+          "url": "https://github.com/advisories/GHSA-c9f4-xj24-8jqx",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<2.6.0"
+        },
+        {
+          "source": 1091710,
+          "name": "uglify-js",
+          "dependency": "uglify-js",
+          "title": "Incorrect Handling of Non-Boolean Comparisons During Minification in uglify-js",
+          "url": "https://github.com/advisories/GHSA-34r7-q49f-h37c",
+          "severity": "critical",
+          "cwe": [
+            "CWE-670",
+            "CWE-1254"
+          ],
+          "cvss": {
+            "score": 9.8,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": "<2.4.24"
+        }
+      ],
+      "effects": [
+        "dist"
+      ],
+      "range": "<=2.5.0",
+      "nodes": [
+        "node_modules/uglify-js"
+      ],
+      "fixAvailable": false
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 1,
+      "critical": 1,
+      "total": 2
+    },
+    "dependencies": {
+      "prod": 13,
+      "dev": 203,
+      "optional": 49,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 215
+    }
+  }
+}
