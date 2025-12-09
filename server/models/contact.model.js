@@ -1,25 +1,10 @@
-import mongoose from 'mongoose'
-//const mongoose = require('mongoose');
-const ContactSchema = new mongoose.Schema({
- firstname: {
- type: String,
- trim: true,
- required: 'Name is required'
- },
+import mongoose from 'mongoose';
 
- lastname: {
-    type: String,
-    trim: true,
-    required: 'Name is required'
-    },
- email: {
- type: String,
- trim: true,
- unique: 'Email already exists',
- match: [/.+\@.+\..+/, 'Please fill a valid email address'],
- required: 'Email is required'
- },
- 
- });
-//module.exports = mongoose.model('User', UserSchema);
+const ContactSchema = new mongoose.Schema({
+  name: { type: String, required: 'Name is required' },
+  email: { type: String, required: 'Email is required' },
+  message: { type: String, required: 'Message is required' },
+  created: { type: Date, default: Date.now },
+});
+
 export default mongoose.model('Contact', ContactSchema);

@@ -1,98 +1,82 @@
-import Project from '../models/project.model.js'
-import extend from 'lodash/extend.js'
-import errorHandler from './error.controller.js'
-const create = async (req, res) => { 
-const project = new Project(req.body) 
-try {
-await project.save()
-return res.status(200).json({ 
-message: "Successfully Created!"
-})
-} catch (err) {
-return res.status(400).json({
-error: errorHandler.getErrorMessage(err) 
-})
-} 
-}
-const list = async (req, res) => { 
-try {
-let projects = await Project.find().select('title firstname lastname email completion description') 
-res.json(projects)
-} catch (err) {
-return res.status(400).json({
-error: errorHandler.getErrorMessage(err) 
-})
-} 
-}
-const projectByID = async (req, res, next, id) => { 
-try {
-let project = await Project.findById(id) 
-if (!project)
-return res.status(400).json({ 
-error: "project not found"
-})
-req.project = project 
-next()
-} catch (err) {
-return res.status('400').json({ 
-error: "Could not retrieve project"
-}) 
-}
-}
-const read = (req, res) => {
-//req.profile.hashed_password = undefined 
-//req.profile.salt = undefined
-return res.json(req.project) 
-}
-const update = async (req, res) => { 
-try {
-let project = req.project
-project = extend(project, req.body) 
-project.updated = Date.now() 
-await project.save()
-//project.hashed_password = undefined 
-//project.salt = undefined
-res.json(project) 
-} catch (err) {
-return res.status(400).json({
-error: errorHandler.getErrorMessage(err) 
-})
-} 
-}
-const remove = async (req, res) => { 
-    try {
-    let project = req.project
-    let deletedProject = await project.deleteOne() 
-    //deletedProject = undefined
-    return res.status(200).json({ 
-        message: "Successfully deleted!"
-        });
-      
-    } catch (err) {
-    return res.status(400).json({
-    error: errorHandler.getErrorMessage(err) 
-    })
-    } 
-    }
-    
+import Project from "../models/project.model.js";
+import extend from "lodash/extend.js";
+import errorHandler from "./error.controller.js";
 
-const removeMany = async (req, res) => {
-    const { ids } = req.body; // Assuming IDs are sent in the request body
-    if (!Array.isArray(ids) || ids.length === 0) {
-        return res.status(400).json({
-            error: "Please provide an array of IDs to delete."
-        });
-    }
-    try {
-        const result = await Project.deleteMany({ _id: { $in: ids } });
-        return res.status(200).json({
-            message: `${result.deletedCount} projects successfully deleted!`
-        });
-    } catch (err) {
-        return res.status(400).json({
-            error: errorHandler.getErrorMessage(err)
-        });
-    }
+const create = async (req, res) => {
+  try {
+    const project = new Project({
+      ...req.body,
+      createdBy: req.auth && req.auth._id,
+    });
+
+    const saved = await project.save();
+    return res.status(201).json(saved);
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err) || "Could not create project",
+    });
+  }
 };
 
-export default { create, projectByID, read, list, remove,removeMany, update }
+const list = async (req, res) => {
+  try {
+    const projects = await Project.find().sort({ created: -1 });
+    return res.json(projects);
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err) || "Could not list projects",
+    });
+  }
+};
+
+const projectByID = async (req, res, next, id) => {
+  try {
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    req.project = project;
+    next();
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(400)
+      .json({ error: "Could not retrieve project with that ID" });
+  }
+};
+
+const read = (req, res) => {
+  return res.json(req.project);
+};
+
+const update = async (req, res) => {
+  try {
+    let project = req.project;
+    project = extend(project, req.body);
+    project.updated = Date.now();
+
+    const saved = await project.save();
+    return res.json(saved);
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err) || "Could not update project",
+    });
+  }
+};
+
+const remove = async (req, res) => {
+  try {
+    await req.project.deleteOne();
+    return res.json({ message: "Project deleted" });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err) || "Could not delete project",
+    });
+  }
+};
+
+export default { create, list, projectByID, read, update, remove };

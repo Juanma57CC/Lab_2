@@ -1,14 +1,32 @@
-import express from 'express'
-    import qualificationCtrl from '../controllers/education.controller.js' 
-    const router = express.Router()
-    router.route('/api/qualifications').post(qualificationCtrl.create)
-    router.route('/api/qualifications').get(qualificationCtrl.list)
-    router.route('/api/qualifications').delete(qualificationCtrl.removeMany)
-    router.param('qualificationId', qualificationCtrl.qualificationByID)
-    router.route('/api/qualifications/:qualificationId').get(qualificationCtrl.read)
-    router.route('/api/qualifications/:qualificationId').put(qualificationCtrl.update)
-    router.route('/api/qualifications/:qualificationId').delete(qualificationCtrl.remove)
+import express from 'express';
+import authCtrl from '../controllers/auth.controller.js';
+import educationCtrl from '../controllers/education.controller.js';
 
-    export default router
+const router = express.Router();
 
+router
+  .route('/api/education')
+  .get(educationCtrl.list) // public read
+  .post(
+    authCtrl.requireSignin,
+    authCtrl.isAdmin,
+    educationCtrl.create
+  );
 
+router
+  .route('/api/education/:educationId')
+  .get(educationCtrl.read)
+  .put(
+    authCtrl.requireSignin,
+    authCtrl.isAdmin,
+    educationCtrl.update
+  )
+  .delete(
+    authCtrl.requireSignin,
+    authCtrl.isAdmin,
+    educationCtrl.remove
+  );
+
+router.param('educationId', educationCtrl.educationByID);
+
+export default router;

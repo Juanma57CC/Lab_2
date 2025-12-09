@@ -1,41 +1,32 @@
-import mongoose from 'mongoose'
-//const mongoose = require('mongoose');
+import mongoose from "mongoose";
+
 const ProjectSchema = new mongoose.Schema({
-
-    title: {
-        type: String,
-        trim: true,
-        required: 'Title is required'
-        },
- firstname: {
- type: String,
- trim: true,
- required: 'Firstname is required'
- },
-
- lastname: {
+  title: {
     type: String,
     trim: true,
-    required: 'Lastname is required'
-    },
- email: {
- type: String,
- trim: true,
- unique: 'Email already exists',
- match: [/.+\@.+\..+/, 'Please fill a valid email address'],
- required: 'Email is required'
- },
- completion: {
+    required: "Title is required",
+  },
+  image: {
+    type: String,
+    trim: true, // e.g. "/project1.jpg" or a full URL
+  },
+  description: {
+    type: String,
+    trim: true,
+    required: "Description is required",
+  },
+  createdBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
+  created: {
     type: Date,
-    //default: Date.now
-       },
+    default: Date.now,
+  },
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-       description: {
-        type: String,
-        trim: true,
-        required: 'description is required'
-        }
-       
- });
-//module.exports = mongoose.model('User', UserSchema);
-export default mongoose.model('Project', ProjectSchema);
+export default mongoose.model("Project", ProjectSchema);

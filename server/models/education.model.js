@@ -1,41 +1,15 @@
-import mongoose from 'mongoose'
-//const mongoose = require('mongoose');
-const QualificationSchema = new mongoose.Schema({
+import mongoose from 'mongoose';
 
-    title: {
-        type: String,
-        trim: true,
-        required: 'Title is required'
-        },
- firstname: {
- type: String,
- trim: true,
- required: 'Firstname is required'
- },
+const EducationSchema = new mongoose.Schema({
+  school: { type: String, required: 'School is required' },
+  degree: { type: String, required: 'Degree is required' },
+  field: { type: String },
+  startYear: { type: String, required: 'Start year is required' },
+  endYear: { type: String },
+  description: { type: String },
+  createdBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
+  created: { type: Date, default: Date.now },
+  updated: { type: Date, default: Date.now },
+});
 
- lastname: {
-    type: String,
-    trim: true,
-    required: 'Lastname is required'
-    },
- email: {
- type: String,
- trim: true,
- unique: 'Email already exists',
- match: [/.+\@.+\..+/, 'Please fill a valid email address'],
- required: 'Email is required'
- },
- completion: {
-    type: Date,
-    //default: Date.now
-       },
-
-       description: {
-        type: String,
-        trim: true,
-        required: 'description is required'
-        }
-       
- });
-//module.exports = mongoose.model('User', UserSchema);
-export default mongoose.model('Qualification', QualificationSchema);
+export default mongoose.model('Education', EducationSchema);
