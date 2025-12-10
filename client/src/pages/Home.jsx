@@ -11,6 +11,7 @@ function Home() {
       {/* Highlights */}
       <p className="max-w-2xl text-lg md:text-xl mb-8">
         Driving business results through efficiency<br />Strategic Workforce Planning Expert<br />Business administrator
+      <br /><br /> CI/DC deployment and testing of new branch
       </p>
 
       {/* Shortcuts */}
